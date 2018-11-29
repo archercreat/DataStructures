@@ -11,6 +11,9 @@ class Stack:
     def peek(self):
         return self.stack[len(self.stack)-1]
 
+    def __len__(self):
+        return len(self.stack)
+
     def clear(self):
         self.stack.clear()
 

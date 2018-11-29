@@ -4,166 +4,146 @@ from stack import Stack
 
 class Node:
 	def __init__(self,data):
-		self.data = data
-		self.left = None
-		self.right = None
-		self.parent = None
+		self._data = data
+		self._left = None
+		self._right = None
+		self._parent = None
 
-	def getData(self):
-		return self.data
+	@property
+	def data(self):
+		return self._data
 
-	def getLeft(self):
-		return self.left
+	@property
+	def left(self):
+		return self._left
 
-	def getRight(self):
-		return self.right
+	@left.setter
+	def left(self, value):
+		self._left = value
 
-	def getParent(self):
-		return self.parent
+	@property
+	def right(self):
+		return self._right
 
-	def setLeft(self, value):
-		self.left = value
+	@right.setter
+	def right(self, value):
+		self._right = value
 
-	def setRight(self, value):
-		self.right = value
+	@property
+	def parent(self):
+		return self._parent
 
-	def setParent(self, value):
-		self.parent = value
+	@parent.setter
+	def parent(self, value):
+		self._parent = value
 
 class BinaryTree:
 	def __init__(self):
-		self.root = None
+		self._root = None
+
+	@property
+	def root(self):
+		return self._root
+
+	@root.setter
+	def root(self, value):
+		self._root = value
 
 	def add(self, item):
 		temp = Node(item)
-		if self.root == None:
+		if(self.root is None):
 			self.root = temp
 		else:
-			previous = self.root
-			if self.root.getData() > temp.getData():
-				current = self.root.getLeft()
-			else:
-				current = self.root.getRight()
+			current = self.root
 			while(current is not None):
-				if current.getData() > temp.getData():
+				if(current.data > temp.data):
 					previous = current
-					current = current.getLeft()
+					current = current.left
 				else:
 					previous = current
-					current = current.getRight()
-			if previous.getData() > temp.getData():
-				previous.setLeft(temp)
+					current = current.right
+
+			if(previous.data > temp.data):
+				previous.left = temp
 			else:
-				previous.setRight(temp)
-			temp.setParent(previous)
+				previous.right = temp
+			temp.parent = previous
 
 	def search(self, value):
-		previous = self.root
-		if self.root.getData() > value:
-			current = self.root.getLeft()
-		elif self.root.getData() < value:
-			current = self.root.getRight()
-		else:
-			return True
+		current = self.root
 		while(current is not None):
-			if current.getData() > value:
-				previous = current
-				current = current.getLeft()
-			elif current.getData() < value:
-				previous = current
-				current = current.getRight()
+			if(current.data > value):
+				current = current.left
+			elif(current.data < value):
+				current = current.right
 			else:
-				return True
+				return current
 		return False
 
-	def getRoot(self):
-		return self.root
+	def delete(self, item):
+		pass
 
-
-	def __isRightChildren(self, node):
-		if(node == node.getParent().getRight()):
+	def _isRightChildren(self, node):
+		if(node == node.parent.right):
 			return True
 		return False
 
-	def __isLeftChildren(self, node):
-		if(node == node.getParent().getLeft()):
+	def empty(self):
+		return True if self.root is None else False
+
+	def _leaf(self, node):
+		if(node.left is None and node.right is None):
 			return True
 		return False
 
-	def getMax(self, root):
-		if(root.getRight() is not None):
-			self.getMax(root.getRight())
-		else:
-			print(root.getData())
-			return
+	def max(self, root):
+		if(root is not None):
+			while(root.right is not None):
+				root = root.right
+			return root
 
-	def getMin(self, root):
-		if(root.getLeft() is not None):
-			self.getMin(root.getLeft())
-		else:
-			print(root.getData())
-			return
+	def min(self, root):
+		if(root is not None):
+			while(root.left is not None):
+				root = root.left
+			return root
 
-	def queuelevelorder(self, root):
+	def preorder(self, root):
 		if(root is None):
 			return
+		print(root.data, end=' ')
+		self.preorder(root.left)
+		self.preorder(root.right)
 
-		q = Queue()
-		q.put(root)
-		while(not q.isEmpty()):
-			temp = q.get()
-			print(temp.getData(), end=' ')
 
-			if(temp.getLeft() is not None):
-				q.put(temp.getLeft())
-
-			if(temp.getRight() is not None):
-				q.put(temp.getRight())
-
-	def preorderRecursive(self, root):
+	def postorder(self, root):
 		if(root is None):
 			return
-		print(root.getData(), end=' ')
-		self.preorderPrint(root.getLeft())
-		self.preorderPrint(root.getRight())
+		self.postorder(root.left)
+		self.postorder(root.right)
+		print(root.data, end=' ')
 
-
-	def postorderRecursive(self, root):
+	def inorder(self, root):
 		if(root is None):
 			return
-		self.preorderPrint(root.getLeft())
-		self.preorderPrint(root.getRight())
-		print(root.getData(), end=' ')
+		self.inorder(root.left)
+		print(root.data, end=' ')
+		self.inorder(root.right)
 
-	def inorderRecursive(self, root):
-		if(root is None):
-			return
-		self.preorderPrint(root.getLeft())
-		print(root.getData(), end=' ')
-		self.preorderPrint(root.getRight())
+'''
+					50
+				  /	  \
+				 45	    60
+				/  \    / \
+			   40  46  55  70
+			  /		  / \   \
+			 30		 54  56  80
+			/ \		 /	  \    \
+		   15 30    53	   57   90
+		  /
+		 14
 
-	def reverseInorderRecursive(self, root):
-		if(root is None):
-			return
-		self.preorderPrint(root.getRight())
-		print(root.getData(), end=' ')
-		self.preorderPrint(root.getLeft())
-
-	def StackPreorder(self, root):
-		if(root is None):
-			return
-		s = Stack()
-		s.push(root)
-		while(s.isEmpty() is False):
-			temp = s.pop()
-			print(temp.getData(), end=' ')
-
-			if(temp.getRight()):
-				s.push(temp.getRight())
-			if(temp.getLeft()):
-				s.push(temp.getLeft())
-
-
+'''
 
 
 
@@ -171,6 +151,7 @@ class BinaryTree:
 
 
 if __name__ == '__main__':
+
 	x = BinaryTree()
 	x.add(50)
 	x.add(45)
@@ -189,7 +170,10 @@ if __name__ == '__main__':
 	x.add(57)
 	x.add(80)
 	x.add(90)
-	x.getMax(x.getRoot())
-	x.getMin(x.getRoot())
-	x.StackPreorder(x.getRoot())
-	#print(x.getMin().getData())
+	print('inorder')
+	x.inorder(x.root)
+	print('\npreorder')
+	x.preorder(x.root)
+	print('\npostorder')
+	x.postorder(x.root)
+	print('\n')
