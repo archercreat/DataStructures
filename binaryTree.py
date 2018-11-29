@@ -50,24 +50,24 @@ class BinaryTree:
 		self._root = value
 
 	def add(self, item):
-		temp = Node(item)
+		node = Node(item)
 		if(self.root is None):
-			self.root = temp
+			self.root = node
 		else:
 			current = self.root
 			while(current is not None):
-				if(current.data > temp.data):
+				if(current.data > node.data):
 					previous = current
 					current = current.left
 				else:
 					previous = current
 					current = current.right
 
-			if(previous.data > temp.data):
-				previous.left = temp
+			if(previous.data > node.data):
+				previous.left = node
 			else:
-				previous.right = temp
-			temp.parent = previous
+				previous.right = node
+			node.parent = previous
 
 	def search(self, value):
 		current = self.root
@@ -97,16 +97,14 @@ class BinaryTree:
 		return False
 
 	def max(self, root):
-		if(root is not None):
-			while(root.right is not None):
-				root = root.right
-			return root
+		while(root.right is not None):
+			root = root.right
+		return root
 
 	def min(self, root):
-		if(root is not None):
-			while(root.left is not None):
-				root = root.left
-			return root
+		while(root.left is not None):
+			root = root.left
+		return root
 
 	def preorder(self, root):
 		if(root is None):
