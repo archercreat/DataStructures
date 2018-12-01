@@ -96,7 +96,7 @@ class BinaryTree:
 		node = self.search(item)
 		parent = node.parent
 		if(parent is None):
-			raise ValueError('Cant delete root, use `del root` instead')
+			del node
 		if(node is not None):
 			if(self._leaf(node)):
 				if(self._isRightChildren(node)):
