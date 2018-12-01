@@ -21,6 +21,10 @@ class Node:
 	def left(self, value):
 		self._left = value
 
+	@left.deleter
+	def left(self):
+		self._left = None
+
 	@property
 	def right(self):
 		return self._right
@@ -29,6 +33,10 @@ class Node:
 	def right(self, value):
 		self._right = value
 
+	@right.deleter
+	def right(self):
+		self._right = None
+
 	@property
 	def parent(self):
 		return self._parent
@@ -36,6 +44,10 @@ class Node:
 	@parent.setter
 	def parent(self, value):
 		self._parent = value
+
+	@parent.deleter
+	def parent(self):
+		self._parent = None
 
 class BinaryTree:
 	def __init__(self):
@@ -48,6 +60,10 @@ class BinaryTree:
 	@root.setter
 	def root(self, value):
 		self._root = value
+
+	@root.deleter
+	def root(self):
+		self._root = None
 
 	def add(self, item):
 		node = Node(item)
@@ -78,10 +94,51 @@ class BinaryTree:
 				current = current.right
 			else:
 				return current
-		return False
+		return None
 
 	def delete(self, item):
-		pass
+		node = self.search(item)
+		if(node is not None):
+			if(self._leaf(node)):
+				if(self._isRightChildren(node)):
+					del node.parent.right
+					del node
+				else:
+					del node.parent.left
+					del node
+
+			elif(node.left is not None and node.right is None):
+				if(self._isRightChildren(node)):
+					node.parent.right = node.left
+					node.left.parent = node.parent
+				else:
+					node.parent.left = node.left
+					node.left.parent = node.parent
+				del node
+
+			elif(node.left is None and node.right is not None):
+				if(self._isRightChildren(node)):
+					node.parent.right = node.right
+					node.right.parent = node.parent
+				else:
+					node.parent.left = node.right
+					node.right.parent = node.parent
+				del node
+				
+			elif(node.left is not None and node.right is not None):
+				rmin = self.min(node.right)
+				if(rmin != node.right):
+					rmin.right = node.right
+					del rmin.parent.left
+
+				rmin.left = node.left
+				rmin.parent = node.parent
+				node.left.parent = rmin
+				if(self._isRightChildren(node)):
+					node.parent.right = rmin
+				else:
+					node.parent.left = rmin
+				del node
 
 	def _isRightChildren(self, node):
 		if(node == node.parent.right):
@@ -128,6 +185,22 @@ class BinaryTree:
 		print(root.data, end=' ')
 		self.inorder(root.right)
 
+	def queuelevelorder(self, root):
+		if(root is None):
+			return
+
+		q = Queue()
+		q.put(root)
+		while(not q.isEmpty()):
+			temp = q.get()
+			print(temp.data, end=' ')
+
+			if(temp.left is not None):
+				q.put(temp.left)
+
+			if(temp.right is not None):
+				q.put(temp.right)
+
 '''
 					50
 				  /	  \
@@ -137,9 +210,9 @@ class BinaryTree:
 			  /		  / \   \
 			 30		 54  56  80
 			/ \		 /	  \    \
-		   15 30    53	   57   90
-		  /
-		 14
+		   15 35    53	   57   90
+		  /   / \
+		 14  34 36
 
 '''
 
@@ -149,29 +222,4 @@ class BinaryTree:
 
 
 if __name__ == '__main__':
-
-	x = BinaryTree()
-	x.add(50)
-	x.add(45)
-	x.add(46)
-	x.add(40)
-	x.add(30)
-	x.add(30)
-	x.add(60)
-	x.add(70)
-	x.add(15)
-	x.add(14)
-	x.add(55)
-	x.add(54)
-	x.add(56)
-	x.add(53)
-	x.add(57)
-	x.add(80)
-	x.add(90)
-	print('inorder')
-	x.inorder(x.root)
-	print('\npreorder')
-	x.preorder(x.root)
-	print('\npostorder')
-	x.postorder(x.root)
-	print('\n')
+	pass
