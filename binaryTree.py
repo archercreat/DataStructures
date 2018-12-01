@@ -1,5 +1,4 @@
 
-from queue import Queue
 
 class Node:
 	def __init__(self,data):
@@ -183,16 +182,3 @@ class BinaryTree:
 		self.inorder(root.left)
 		print(root.data, end=' ')
 		self.inorder(root.right)
-
-	def queuelevelorder(self, root):
-		if(root is None):
-			return
-		q = Queue()
-		q.put(root)
-		while(not q.isEmpty()):
-			temp = q.get()
-			print(temp.data, end=' ')
-			if(temp.left is not None):
-				q.put(temp.left)
-			if(temp.right is not None):
-				q.put(temp.right)
