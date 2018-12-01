@@ -212,13 +212,3 @@ class BinaryTree:
 		 14  34 36
 
 '''
-
-
-
-
-
-
-if __name__ == '__main__':
-	x = BinaryTree()
-	x.add(50)
-	x.delete(50)
