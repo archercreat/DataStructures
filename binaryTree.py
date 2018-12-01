@@ -1,4 +1,4 @@
-#TODO: add delete function
+
 from queue import Queue
 from stack import Stack
 
@@ -70,61 +70,61 @@ class BinaryTree:
 		if(self.root is None):
 			self.root = node
 		else:
-			current = self.root
-			while(current is not None):
-				if(current.data > node.data):
-					previous = current
-					current = current.left
+			cur = self.root
+			while(cur is not None):
+				if(cur.data > node.data):
+					prev, cur = cur, cur.left
 				else:
-					previous = current
-					current = current.right
+					prev, cur = cur, cur.right
 
-			if(previous.data > node.data):
-				previous.left = node
+			if(prev.data > node.data):
+				prev.left = node
 			else:
-				previous.right = node
-			node.parent = previous
+				prev.right = node
+			node.parent = prev
 
 	def search(self, value):
-		current = self.root
-		while(current is not None):
-			if(current.data > value):
-				current = current.left
-			elif(current.data < value):
-				current = current.right
+		cur = self.root
+		while(cur is not None):
+			if(cur.data > value):
+				cur = cur.left
+			elif(cur.data < value):
+				cur = cur.right
 			else:
-				return current
+				return cur
 		return None
 
 	def delete(self, item):
 		node = self.search(item)
+		parent = node.parent
+		if(parent is None):
+			raise ValueError('Cant delete root, use `del root` instead')
 		if(node is not None):
 			if(self._leaf(node)):
 				if(self._isRightChildren(node)):
-					del node.parent.right
-					del node
+					del parent.right
 				else:
-					del node.parent.left
-					del node
+					del parent.left
+				del node
 
 			elif(node.left is not None and node.right is None):
 				if(self._isRightChildren(node)):
-					node.parent.right = node.left
-					node.left.parent = node.parent
+					parent.right = node.left
+					node.left.parent = parent
 				else:
-					node.parent.left = node.left
-					node.left.parent = node.parent
+					parent.left = node.left
+					node.left.parent = parent
 				del node
 
 			elif(node.left is None and node.right is not None):
 				if(self._isRightChildren(node)):
-					node.parent.right = node.right
-					node.right.parent = node.parent
+					parent.right = node.right
+					node.right.parent = parent
 				else:
-					node.parent.left = node.right
-					node.right.parent = node.parent
+					parent.left = node.right
+					node.right.parent = parent
 				del node
-				
+
 			elif(node.left is not None and node.right is not None):
 				rmin = self.min(node.right)
 				if(rmin != node.right):
@@ -132,12 +132,12 @@ class BinaryTree:
 					del rmin.parent.left
 
 				rmin.left = node.left
-				rmin.parent = node.parent
+				rmin.parent = parent
 				node.left.parent = rmin
 				if(self._isRightChildren(node)):
-					node.parent.right = rmin
+					parent.right = rmin
 				else:
-					node.parent.left = rmin
+					parent.left = rmin
 				del node
 
 	def _isRightChildren(self, node):
@@ -188,16 +188,13 @@ class BinaryTree:
 	def queuelevelorder(self, root):
 		if(root is None):
 			return
-
 		q = Queue()
 		q.put(root)
 		while(not q.isEmpty()):
 			temp = q.get()
 			print(temp.data, end=' ')
-
 			if(temp.left is not None):
 				q.put(temp.left)
-
 			if(temp.right is not None):
 				q.put(temp.right)
 
@@ -222,4 +219,6 @@ class BinaryTree:
 
 
 if __name__ == '__main__':
-	pass
+	x = BinaryTree()
+	x.add(50)
+	x.delete(50)
