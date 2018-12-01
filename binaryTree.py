@@ -197,18 +197,3 @@ class BinaryTree:
 				q.put(temp.left)
 			if(temp.right is not None):
 				q.put(temp.right)
-
-'''
-					50
-				  /	  \
-				 45	    60
-				/  \    / \
-			   40  46  55  70
-			  /		  / \   \
-			 30		 54  56  80
-			/ \		 /	  \    \
-		   15 35    53	   57   90
-		  /   / \
-		 14  34 36
-
-'''
